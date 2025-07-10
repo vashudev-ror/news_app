@@ -1,0 +1,19 @@
+inherit_from:
+  - .rubocop_todo.yml
+
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/*'
+    - 'node_modules/**/*'
+    
+RSpec:
+  Enabled: true
+  Include:
+    - spec/**/*_spec.rb
