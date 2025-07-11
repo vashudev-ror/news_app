@@ -3,7 +3,7 @@ namespace :import do
   task news_articles: :environment do
     require 'csv'
 
-    csv_path = Rails.root.join('data', 'news_articles.csv')
+    csv_path = Rails.root.join("data/news_articles.csv")
     unless File.exist?(csv_path)
       puts "CSV file not found at #{csv_path}"
       next
@@ -23,30 +23,30 @@ namespace :import do
       )
 
       if article.save
-        puts "✔ Imported: #{title}"
-        article.like_counts.destroy_all # idempotent step
+        puts "Imported: #{title}"
+        article.like_counts.destroy_all
         parse_likes(row['like_counts_per_date']).each do |date, count|
           article.like_counts.create!(date: date, count: count)
         end
       else
-        puts "⚠ Failed to save article: #{title}"
+        puts "Failed to save article: #{title}"
         puts article.errors.full_messages
       end
     end
   end
 
   def read_html_body(title)
-    filename = title.downcase.gsub(/[\s\-\/]/, '_')
-                             .gsub(/[.:\'%]/, '')
-                             .concat('.html')
+    filename = title.downcase.gsub(%r{[\s\-/]}, '_')
+                    .gsub(/[.:\'%]/, '')
+                    .concat('.html')
     file_path = Rails.root.join('data', filename)
     File.read(file_path)
   rescue Errno::ENOENT
-    puts "⚠ Missing body file for: #{title}"
+    puts "Missing body file for: #{title}"
     ''
   end
 
   def parse_likes(likes_string)
-    likes_string.split('|').map { |pair| pair.split(':') }.to_h.transform_values(&:to_i)
+    likes_string.split('|').to_h { |pair| pair.split(':') }.transform_values(&:to_i)
   end
 end

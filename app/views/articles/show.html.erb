@@ -1,0 +1,10 @@
+<h1><%= @article.title %></h1>
+
+<p><strong>Author:</strong> <%= @article.author %></p>
+<p><strong>Category:</strong> <%= @article.category %></p>
+<p><strong>Published:</strong> <%= @article.publication_date %></p>
+<p><strong>Total Likes:</strong> <%= @total_likes %></p>
+
+<div class="article-body">
+  <%= raw @article.body %>
+</div>

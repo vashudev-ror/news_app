@@ -1,0 +1,27 @@
+<h1>News Articles</h1>
+
+<%= form_with url: articles_path, method: :get, local: true, data: { controller: "author-filter" } do %>
+<label>Category:</label>
+  <%= select_tag :category,
+        options_for_select(@categories.unshift(""), params[:category]),
+        data: { action: "change->author-filter#updateAuthors", author_filter_target: "category" } %>
+<label>Author:</label>
+  <%= select_tag :author,
+        options_for_select(@authors.unshift(""), params[:author]),
+        data: { author_filter_target: "author" } %>
+
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<% @articles.each do |article| %>
+  <div class="article-preview">
+    <h2><%= link_to article.title, article_path(article) %></h2>
+    <p><strong>Author:</strong> <%= article.author %></p>
+    <p><strong>Category:</strong> <%= article.category %></p>
+    <p><strong>Published:</strong> <%= article.publication_date %></p>
+    <p><strong>Total Likes:</strong> <%= article.like_counts.sum(:count) %></p>
+    <p><%= truncate(strip_tags(article.body), length: 200, separator: ' ') %>...</p>
+  </div>
+<% end %>
+
+<%= raw pagy_nav(@pagy) %>
