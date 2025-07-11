@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :article do
-    title { "MyString" }
-    publication_date { "2025-07-10" }
-    category { "MyString" }
-    author { "MyString" }
-    body { "MyText" }
+    sequence(:title) { |n| "Sample Title #{n}" }
+    publication_date { Time.zone.today }
+    category { "Tech" }
+    author { "Author #{rand(100)}" }
+    body { "Sample article body" }
   end
 end

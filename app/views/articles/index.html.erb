@@ -1,27 +1,39 @@
 <h1>News Articles</h1>
 
 <%= form_with url: articles_path, method: :get, local: true, data: { controller: "author-filter" } do %>
-<label>Category:</label>
+  <label for="category_select">Category:</label>
   <%= select_tag :category,
-        options_for_select(@categories.unshift(""), params[:category]),
+        options_for_select(@categories, params[:category]),
+        id: "category_select",
         data: { action: "change->author-filter#updateAuthors", author_filter_target: "category" } %>
-<label>Author:</label>
+
+  <label for="author_select">Author:</label>
   <%= select_tag :author,
-        options_for_select(@authors.unshift(""), params[:author]),
+        options_for_select(@authors, params[:author]),
+        id: "author_select",
         data: { author_filter_target: "author" } %>
 
-  <%= submit_tag "Filter" %>
+  <%= submit_tag "Filter", class: "btn btn-primary" %>
+  <%= link_to "Clear Filters", articles_path, class: "btn btn-secondary" %>
 <% end %>
 
-<% @articles.each do |article| %>
-  <div class="article-preview">
-    <h2><%= link_to article.title, article_path(article) %></h2>
-    <p><strong>Author:</strong> <%= article.author %></p>
-    <p><strong>Category:</strong> <%= article.category %></p>
-    <p><strong>Published:</strong> <%= article.publication_date %></p>
-    <p><strong>Total Likes:</strong> <%= article.like_counts.sum(:count) %></p>
-    <p><%= truncate(strip_tags(article.body), length: 200, separator: ' ') %>...</p>
-  </div>
-<% end %>
+<div class="articles-list">
+  <% if @articles.empty? %>
+    <p>No articles found matching your criteria.</p>
+  <% else %>
+    <% @articles.each do |article| %>
+      <div class="article-preview">
+        <h2><%= link_to article.title, article_path(article) %></h2>
+        <p><strong>Author:</strong> <%= article.author %></p>
+        <p><strong>Category:</strong> <%= article.category %></p>
+        <p><strong>Published:</strong> <%= article.publication_date.strftime("%Y-%m-%d") %></p>
+        <p><strong>Total Likes:</strong> <%= article.total_likes %></p>
+        <p><%= article.body_excerpt %>...</p>
+      </div>
+    <% end %>
+  <% end %>
+</div>
 
-<%= raw pagy_nav(@pagy) %>
+<div class="pagy-nav">
+  <%= raw pagy_nav(@pagy) %>
+</div>

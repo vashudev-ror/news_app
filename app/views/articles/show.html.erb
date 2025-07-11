@@ -2,9 +2,11 @@
 
 <p><strong>Author:</strong> <%= @article.author %></p>
 <p><strong>Category:</strong> <%= @article.category %></p>
-<p><strong>Published:</strong> <%= @article.publication_date %></p>
-<p><strong>Total Likes:</strong> <%= @total_likes %></p>
+<p><strong>Published:</strong> <%= @article.publication_date.strftime("%Y-%m-%d") %></p> 
+<p><strong>Total Likes:</strong> <%= @article.total_likes %></p>
 
 <div class="article-body">
-  <%= raw @article.body %>
+  <%= @article.body.html_safe %>
 </div>
+
+<%= link_to "Back to Articles", articles_path, class: "btn btn-primary" %>
